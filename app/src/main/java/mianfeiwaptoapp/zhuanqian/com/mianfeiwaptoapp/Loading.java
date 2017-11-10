@@ -26,7 +26,7 @@ public class Loading extends Activity implements RewardedVideoAdListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId(Config.FULL_SCREEN_ID);
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 //        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
 //        mRewardedVideoAd.setRewardedVideoAdListener(this);

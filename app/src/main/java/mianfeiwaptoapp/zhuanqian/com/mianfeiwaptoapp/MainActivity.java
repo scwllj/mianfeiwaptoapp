@@ -1,7 +1,10 @@
 package mianfeiwaptoapp.zhuanqian.com.mianfeiwaptoapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -14,7 +17,10 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -23,8 +29,8 @@ public class MainActivity extends Activity {
     ImageView back;
     ImageView home;
     ImageView refresh;
-    final String HOME = "http://app.xianglaishengmy.com/Agent/Buy/index";
-    String HOME_PAGE;
+    TextView titleView;
+    String HOME="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +39,30 @@ public class MainActivity extends Activity {
         back = findViewById(R.id.back);
         home = findViewById(R.id.home);
         refresh = findViewById(R.id.refresh);
-
+        titleView = findViewById(R.id.title);
+        titleView.setText(getMyTitle());
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(webview.canGoBack()){
                     webview.goBack();
                 }
+            }
+        });
+
+        titleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
+                final EditText editText = inputLayout.findViewById(R.id.edittext);
+                Button button =  inputLayout.findViewById(R.id.btn);
+                button.setVisibility(View.GONE);
+                new AlertDialog.Builder(MainActivity.this).setCustomTitle(inputLayout).setMessage("上方填写霸气的标题").setNegativeButton("我已认定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        setMyTitle(editText.getText().toString().trim());
+                    }
+                }).show();
             }
         });
 
@@ -99,7 +122,6 @@ public class MainActivity extends Activity {
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
 //                Log.e("----Request", ""+url);
                 return super.shouldInterceptRequest(view, url);
-
             }
 
             @Override
@@ -129,9 +151,7 @@ public class MainActivity extends Activity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
 //                Log.e("----onPageFinished", ""+url);
-                if(HOME_PAGE==null){
-                    HOME_PAGE = url;
-                }
+
             }
         });
 //        webview.setOnKeyListener(new View.OnKeyListener() {
@@ -147,6 +167,17 @@ public class MainActivity extends Activity {
         webview.getSettings().setAllowContentAccess(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.loadUrl(HOME);
+    }
+
+    private String getMyTitle(){
+        return getSharedPreferences("myConfig",MODE_PRIVATE).getString("title",getString(R.string.app_name));
+    }
+
+    private void setMyTitle(String title){
+        titleView.setText(title);
+        SharedPreferences.Editor editor = getSharedPreferences("myConfig",MODE_PRIVATE).edit();
+        editor.putString("title",title);
+        editor.commit();
     }
 
     long mills = 0;

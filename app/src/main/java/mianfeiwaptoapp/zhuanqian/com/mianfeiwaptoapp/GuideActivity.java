@@ -1,6 +1,8 @@
 package mianfeiwaptoapp.zhuanqian.com.mianfeiwaptoapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,10 +12,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
@@ -21,11 +26,16 @@ import java.util.ArrayList;
 public class GuideActivity extends Activity{
     ArrayList<View> contents = new ArrayList<>();
     ViewPager viewPager;
-    private AdView mAdView,adViewrectangle;
+    private AdView mAdView,adViewrectangle,adView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gaide);
+        adView = new AdView(GuideActivity.this);
+        adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
+        adView.setAdUnitId(Config.BANNER_RECTANGLE_ID);
+        adView.loadAd(new AdRequest.Builder().build());
+
         viewPager = findViewById(R.id.viewPager);
         mAdView = findViewById(R.id.adView);
         adViewrectangle = findViewById(R.id.adViewrectangle);
@@ -39,17 +49,28 @@ public class GuideActivity extends Activity{
             textView.setTextSize(16);
             textView.setGravity(Gravity.CENTER);
             textView.setText(names[i]);
-            if(i==names.length-1){
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        GuideActivity.this.startActivity(new Intent(GuideActivity.this,MainActivity.class));
-                        finish();
-                    }
-                });
-            }
             contents.add(textView);
         }
+        View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
+        final EditText editText = inputLayout.findViewById(R.id.edittext);
+        Button button =  inputLayout.findViewById(R.id.btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new AlertDialog.Builder(GuideActivity.this).setCustomTitle(adView).setMessage("请检查好URL,如果随便乱输，后果自行负责！").setNegativeButton("程序猿就是废话多!\n啪~~", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String  ass= editText.getText().toString();
+                        Util.setUrl(GuideActivity.this,ass);
+                        startActivity(new Intent(GuideActivity.this,MainActivity.class));
+                        finish();
+                    }
+                }).show();
+            }
+        });
+        contents.add(inputLayout);
         viewPager.setAdapter(new MyAdapter());
         viewPager.setCurrentItem(0);
     }
