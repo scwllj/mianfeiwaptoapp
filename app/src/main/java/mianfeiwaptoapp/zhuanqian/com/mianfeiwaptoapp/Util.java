@@ -33,6 +33,13 @@ public class Util {
         editor.commit();
     }
 
+    public static void resetUrl(Context context){
+        SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("murl","");
+        editor.commit();
+    }
+
     private static String MD5Encript(String src){
         if (TextUtils.isEmpty(src)) {
             return "";

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -20,6 +21,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,27 @@ public class MainActivity extends Activity {
         refresh = findViewById(R.id.refresh);
         titleView = findViewById(R.id.title);
         titleView.setText(getMyTitle());
+        HOME = Util.getUrl(this);
+        if(!HOME.startsWith("http")){
+            new AlertDialog.Builder(this).setCustomTitle(ADTool.getADView(this))
+                    .setMessage("你的url不是以http开头的,页面加载不出来,请清除应用数据，重启app").setNegativeButton("我去设置", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent intent = new Intent("com.android.settings");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }).setPositiveButton("帮我重置", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Util.resetUrl(MainActivity.this);
+                    Intent intent = new Intent(MainActivity.this,Loading.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }).show();
+        }
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,16 +76,17 @@ public class MainActivity extends Activity {
         titleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
+                View inputLayout =  getLayoutInflater().inflate(R.layout.input_layout,null);
                 final EditText editText = inputLayout.findViewById(R.id.edittext);
-                Button button =  inputLayout.findViewById(R.id.btn);
-                button.setVisibility(View.GONE);
-                new AlertDialog.Builder(MainActivity.this).setCustomTitle(inputLayout).setMessage("上方填写霸气的标题").setNegativeButton("我已认定", new DialogInterface.OnClickListener() {
+                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).setCustomTitle(inputLayout).setMessage("上方填写霸气的标题").setNegativeButton("我已认定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         setMyTitle(editText.getText().toString().trim());
                     }
-                }).show();
+                }).create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                dialog.show();
             }
         });
 
