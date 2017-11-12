@@ -24,7 +24,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-dontwarn com.google.**
 -dontwarn com.google.ads.**
--keep public class com.google.ads.**{
+-keep public class com.google.**{
     public protected *;
 }

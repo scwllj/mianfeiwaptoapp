@@ -41,6 +41,30 @@ public class GuideActivity extends Activity{
         viewPager = findViewById(R.id.viewPager);
         mAdView = findViewById(R.id.adView);
         adViewrectangle = findViewById(R.id.adViewrectangle);
+
+
+        ADTool.loadAD(adViewrectangle,ADTool.AD_BANNER_RECTANGLE);
+        ADTool.loadAD(mAdView,ADTool.AD_BANNER);
+        names = new ArrayList<>();
+        names.add("这是一款完全免费的app，用来送亲朋送好友送情人，老少皆宜。来来来！在这可以滑动。");
+        names.add("注意：这款app可以锁定一个主页地址，锁定之后，只能在app管理中清除数据，方可启用重设大法！");
+        names.add("注意：这款app可以定制主页的标题。你进入主页有点击标题，方可编辑。输入框为空，我可是不会改的哦！");
+        names.add("注意：此款app有密码锁，后面的步骤会邀请你设置。你锁定的主页只希望你能看到，比如XXX,你懂的。要重设密码，还是请到应用设置清除数据");
+        names.add("注意：清除数据之后，以前的设置什么都没有了，请记住你锁定的主页地址");
+        for (int i = 0; i <names.size() ; i++) {
+            TextView textView = new TextView(GuideActivity.this);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            textView.setTextColor(Color.RED);
+            textView.setTextSize(16);
+            textView.setGravity(Gravity.CENTER);
+            textView.setText(names.get(i));
+            contents.add(textView);
+        }
+        for (int i = 0; i <2 ; i++) {
+            View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
+            contents.add(inputLayout);
+        }
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -57,28 +81,6 @@ public class GuideActivity extends Activity{
 
             }
         });
-
-        ADTool.loadAD(adViewrectangle,ADTool.AD_BANNER_RECTANGLE);
-        ADTool.loadAD(mAdView,ADTool.AD_BANNER);
-        names = new ArrayList<>();
-        names.add("整点广告试试，来来来！在这可以滑动。");
-        names.add("第2句话");
-        names.add("第3句话");
-        names.add("程序猿要少说废话！点击揍他");
-        for (int i = 0; i <names.size() ; i++) {
-            TextView textView = new TextView(GuideActivity.this);
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            textView.setTextColor(Color.RED);
-            textView.setTextSize(16);
-            textView.setGravity(Gravity.CENTER);
-            textView.setText(names.get(i));
-            contents.add(textView);
-        }
-        for (int i = 0; i <2 ; i++) {
-            View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
-            contents.add(inputLayout);
-        }
-
         viewPager.setAdapter(new MyAdapter());
         viewPager.setCurrentItem(0);
     }
@@ -90,6 +92,9 @@ public class GuideActivity extends Activity{
             Log.e("----instantiateItem", "instantiateItem");
             View view = contents.get(position);
             container.addView(view);
+            if(position<names.size()){
+                return view;
+            }
             final EditText editText = view.findViewById(R.id.edittext);
             Button button =  view.findViewById(R.id.btn);
             if(position==names.size()+1){
@@ -120,7 +125,7 @@ public class GuideActivity extends Activity{
                     }
                 });
             }
-            return contents.get(position);
+            return view;
         }
 
         @Override

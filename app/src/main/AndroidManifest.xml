@@ -26,7 +26,8 @@
         <activity
             android:name=".GuideActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".PSWActivity"></activity>
+        <activity android:name=".PSWActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
     </application>
 
 </manifest>
