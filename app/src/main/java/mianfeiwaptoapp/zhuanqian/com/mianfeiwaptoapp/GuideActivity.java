@@ -26,51 +26,59 @@ import java.util.ArrayList;
 public class GuideActivity extends Activity{
     ArrayList<View> contents = new ArrayList<>();
     ViewPager viewPager;
+    ArrayList<String>  names;
     private AdView mAdView,adViewrectangle,adView;
+    TextView pageControl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gaide);
         adView = new AdView(GuideActivity.this);
         adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
-        adView.setAdUnitId(Config.BANNER_RECTANGLE_ID);
-        adView.loadAd(new AdRequest.Builder().build());
+        pageControl = findViewById(R.id.pagecontrol);
+        ADTool.loadAD(adView,ADTool.AD_BANNER_RECTANGLE);
 
         viewPager = findViewById(R.id.viewPager);
         mAdView = findViewById(R.id.adView);
         adViewrectangle = findViewById(R.id.adViewrectangle);
-        mAdView.loadAd(new AdRequest.Builder().build());
-        adViewrectangle.loadAd(new AdRequest.Builder().build());
-        String []names = {"整点广告试试，来来来！在这可以滑动。","第2句话","第3句话","程序猿要少说废话！点击揍他"};
-        for (int i = 0; i <names.length ; i++) {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pageControl.setText(position+"/"+names.size()+2);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        ADTool.loadAD(adViewrectangle,ADTool.AD_BANNER_RECTANGLE);
+        ADTool.loadAD(mAdView,ADTool.AD_BANNER);
+        names = new ArrayList<>();
+        names.add("整点广告试试，来来来！在这可以滑动。");
+        names.add("第2句话");
+        names.add("第3句话");
+        names.add("程序猿要少说废话！点击揍他");
+        for (int i = 0; i <names.size() ; i++) {
             TextView textView = new TextView(GuideActivity.this);
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             textView.setTextColor(Color.RED);
             textView.setTextSize(16);
             textView.setGravity(Gravity.CENTER);
-            textView.setText(names[i]);
+            textView.setText(names.get(i));
             contents.add(textView);
         }
-        View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
-        final EditText editText = inputLayout.findViewById(R.id.edittext);
-        Button button =  inputLayout.findViewById(R.id.btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        for (int i = 0; i <2 ; i++) {
+            View inputLayout =  getLayoutInflater().inflate(R.layout.inout_layout,null);
+            contents.add(inputLayout);
+        }
 
-                new AlertDialog.Builder(GuideActivity.this).setCustomTitle(adView).setMessage("请检查好URL,如果随便乱输，后果自行负责！").setNegativeButton("程序猿就是废话多!\n啪~~", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String  ass= editText.getText().toString();
-                        Util.setUrl(GuideActivity.this,ass);
-                        startActivity(new Intent(GuideActivity.this,MainActivity.class));
-                        finish();
-                    }
-                }).show();
-            }
-        });
-        contents.add(inputLayout);
         viewPager.setAdapter(new MyAdapter());
         viewPager.setCurrentItem(0);
     }
@@ -80,7 +88,38 @@ public class GuideActivity extends Activity{
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Log.e("----instantiateItem", "instantiateItem");
-            container.addView(contents.get(position));
+            View view = contents.get(position);
+            container.addView(view);
+            final EditText editText = view.findViewById(R.id.edittext);
+            Button button =  view.findViewById(R.id.btn);
+            if(position==names.size()+1){
+                button.setText("老猿，给我记住这个密码");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Util.setPSW(GuideActivity.this,editText.getText().toString().trim());
+                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(adView).setMessage("你如果你输入为空，就是没有密码！").setPositiveButton("老猿废话多",null).setPositiveButton("重新输入",null ).show();
+                    }
+                });
+            }else if(position==names.size()+1){
+                button.setText("老猿，给我记住这个网站");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(adView).setMessage("请检查好URL,如果随便乱输，后果自行负责！").setNegativeButton("好了,进入主页吧!\n老猿gun远点~~", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String  ass= editText.getText().toString();
+                                Util.setUrl(GuideActivity.this,ass);
+                                startActivity(new Intent(GuideActivity.this,MainActivity.class));
+                                finish();
+                            }
+                        }).show();
+                    }
+                });
+            }
             return contents.get(position);
         }
 

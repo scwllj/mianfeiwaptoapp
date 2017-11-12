@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -26,7 +27,7 @@ public class Loading extends Activity implements RewardedVideoAdListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(Config.FULL_SCREEN_ID);
+        mInterstitialAd.setAdUnitId(ADTool.AD_FULL_SCREEN);
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 //        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
 //        mRewardedVideoAd.setRewardedVideoAdListener(this);
@@ -51,9 +52,18 @@ public class Loading extends Activity implements RewardedVideoAdListener {
         });
     }
 
+    long mills;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){
+            long current = System.currentTimeMillis();
+            if(current-mills>1000){
+                Toast.makeText(Loading.this,"再按一次，退出",Toast.LENGTH_SHORT).show();
+                mills = current;
+                return true;
+            }
+            finish();
+            System.exit(0);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -117,6 +127,8 @@ public class Loading extends Activity implements RewardedVideoAdListener {
         Intent intent = new Intent(Loading.this,GuideActivity.class);
         if(!TextUtils.isEmpty(Util.getUrl(Loading.this.getApplicationContext()))){
             intent = new Intent(Loading.this,MainActivity.class);
+        }else if(Util.hasPSW(Loading.this)){
+            intent = new Intent(Loading.this,PSWActivity.class);
         }
         startActivity(intent);
         finish();

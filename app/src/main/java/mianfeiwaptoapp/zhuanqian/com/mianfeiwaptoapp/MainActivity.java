@@ -25,6 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class MainActivity extends Activity {
 
     WebView webview;
@@ -33,6 +36,7 @@ public class MainActivity extends Activity {
     ImageView refresh;
     TextView titleView;
     String HOME="";
+    AdView bottomADView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,8 @@ public class MainActivity extends Activity {
         home = findViewById(R.id.home);
         refresh = findViewById(R.id.refresh);
         titleView = findViewById(R.id.title);
+        bottomADView = findViewById(R.id.adViewbottom);
+        bottomADView.loadAd(new AdRequest.Builder().build());
         titleView.setText(getMyTitle());
         HOME = Util.getUrl(this);
         if(!HOME.startsWith("http")){
@@ -187,7 +193,6 @@ public class MainActivity extends Activity {
 //            }
 //        });
         webview.getSettings().setJavaScriptEnabled(true);
-//        webview.getSettings().setAllowUniversalAccessFromFileURLs(true);
         webview.getSettings().setAllowContentAccess(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.loadUrl(HOME);

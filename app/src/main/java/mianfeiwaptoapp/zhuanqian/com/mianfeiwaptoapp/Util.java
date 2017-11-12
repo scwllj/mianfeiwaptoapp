@@ -68,5 +68,36 @@ public class Util {
         return src;
     }
 
+    public static void setPSW(Context context,String psw){
+        SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("asdasdw",""+MD5Encript(psw));
+        editor.commit();
+    }
+
+    public static boolean checkPSW(Context context,String psw){
+        SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
+        String oldPsw = sp.getString("asdasdw","");
+        if(TextUtils.isEmpty(oldPsw)){
+            return true;
+        }
+        if(TextUtils.isEmpty(psw)){
+            return false;
+        }
+        if(oldPsw.equals(MD5Encript(psw))){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean hasPSW(Context context){
+        SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
+        String oldPsw = sp.getString("asdasdw","");
+        if(!TextUtils.isEmpty(oldPsw)){
+            return true;
+        }
+        return false;
+    }
+
 
 }
