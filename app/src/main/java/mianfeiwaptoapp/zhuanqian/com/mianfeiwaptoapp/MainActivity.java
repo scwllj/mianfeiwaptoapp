@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -28,7 +30,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     WebView webview;
     ImageView back;
@@ -84,15 +86,19 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 View inputLayout =  getLayoutInflater().inflate(R.layout.input_layout,null);
                 final EditText editText = inputLayout.findViewById(R.id.edittext);
-                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).setCustomTitle(inputLayout).setMessage("上方填写霸气的标题").setNegativeButton("我已认定", new DialogInterface.OnClickListener() {
+                loadAD((AdView)inputLayout.findViewById(R.id.adViewrectangle));
+                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).setMessage("上方填写霸气的标题").setNegativeButton("我已认定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         setMyTitle(editText.getText().toString().trim());
                     }
                 }).create();
-                dialog.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                dialog.setCustomTitle(inputLayout);
                 dialog.show();
+                editText.requestFocus();
+                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             }
         });
 
@@ -203,6 +209,9 @@ public class MainActivity extends Activity {
     }
 
     private void setMyTitle(String title){
+        if(TextUtils.isEmpty(title)){
+            return;
+        }
         titleView.setText(title);
         SharedPreferences.Editor editor = getSharedPreferences("myConfig",MODE_PRIVATE).edit();
         editor.putString("title",title);
@@ -227,5 +236,10 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void refreshAD() {
+        bottomADView.loadAd(new AdRequest.Builder().build());
     }
 }

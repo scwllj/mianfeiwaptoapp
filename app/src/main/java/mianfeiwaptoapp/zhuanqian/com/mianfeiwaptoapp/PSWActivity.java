@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
-public class PSWActivity extends Activity {
+public class PSWActivity extends BaseActivity {
 
     Button confirm;
     EditText editText;
@@ -39,8 +39,14 @@ public class PSWActivity extends Activity {
         });
     }
 
+    @Override
+    protected void refreshAD() {
+        ADTool.loadAD((AdView) findViewById(R.id.adView),ADTool.AD_BANNER);
+        ADTool.loadAD((AdView) findViewById(R.id.adViewrectangle),ADTool.AD_BANNER_RECTANGLE);
+    }
+
     private void initAD(){
-            ADTool.loadAD((AdView) findViewById(R.id.adView),ADTool.AD_BANNER);
+        ADTool.loadAD((AdView) findViewById(R.id.adView),ADTool.AD_BANNER);
         ADTool.loadAD((AdView) findViewById(R.id.adViewrectangle),ADTool.AD_BANNER_RECTANGLE);
     }
 }

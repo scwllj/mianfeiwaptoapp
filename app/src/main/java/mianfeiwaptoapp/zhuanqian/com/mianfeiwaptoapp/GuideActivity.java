@@ -1,11 +1,11 @@
 package mianfeiwaptoapp.zhuanqian.com.mianfeiwaptoapp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -16,35 +16,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 
-public class GuideActivity extends Activity{
+public class GuideActivity extends BaseActivity{
     ArrayList<View> contents = new ArrayList<>();
     ViewPager viewPager;
     ArrayList<String>  names;
-    private AdView mAdView,adViewrectangle,adView;
+    private AdView mAdView,adViewrectangle;
     TextView pageControl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gaide);
-        adView = new AdView(GuideActivity.this);
-        adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
         pageControl = findViewById(R.id.pagecontrol);
-        ADTool.loadAD(adView,ADTool.AD_BANNER_RECTANGLE);
 
         viewPager = findViewById(R.id.viewPager);
         mAdView = findViewById(R.id.adView);
         adViewrectangle = findViewById(R.id.adViewrectangle);
 
-
-        ADTool.loadAD(adViewrectangle,ADTool.AD_BANNER_RECTANGLE);
-        ADTool.loadAD(mAdView,ADTool.AD_BANNER);
+        loadAD(adViewrectangle);
+        loadAD(mAdView);
         names = new ArrayList<>();
         names.add("这是一款完全免费的app，用来送亲朋送好友送情人，老少皆宜。来来来！在这可以滑动。");
         names.add("注意：这款app可以锁定一个主页地址，锁定之后，只能在app管理中清除数据，方可启用重设大法！");
@@ -73,7 +66,7 @@ public class GuideActivity extends Activity{
 
             @Override
             public void onPageSelected(int position) {
-                pageControl.setText(position+"/"+names.size()+2);
+                pageControl.setText(position+"/"+(names.size()+2));
             }
 
             @Override
@@ -89,6 +82,14 @@ public class GuideActivity extends Activity{
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+
+            viewPager.setEnabled(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    viewPager.setEnabled(true);
+                }
+            },2000);
             Log.e("----instantiateItem", "instantiateItem");
             View view = contents.get(position);
             container.addView(view);
@@ -97,13 +98,13 @@ public class GuideActivity extends Activity{
             }
             final EditText editText = view.findViewById(R.id.edittext);
             Button button =  view.findViewById(R.id.btn);
-            if(position==names.size()+1){
+            if(position==names.size()){
                 button.setText("老猿，给我记住这个密码");
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Util.setPSW(GuideActivity.this,editText.getText().toString().trim());
-                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(adView).setMessage("你如果你输入为空，就是没有密码！").setPositiveButton("老猿废话多",null).setPositiveButton("重新输入",null ).show();
+                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(ADTool.getBannerRectangle(GuideActivity.this)).setMessage("你如果你输入为空，就是没有密码！").setPositiveButton("老猿废话多",null).setPositiveButton("重新输入",null ).show();
                     }
                 });
             }else if(position==names.size()+1){
@@ -112,7 +113,7 @@ public class GuideActivity extends Activity{
                     @Override
                     public void onClick(View view) {
 
-                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(adView).setMessage("请检查好URL,如果随便乱输，后果自行负责！").setNegativeButton("好了,进入主页吧!\n老猿gun远点~~", new DialogInterface.OnClickListener() {
+                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(ADTool.getBannerRectangle(GuideActivity.this)).setMessage("请检查好URL,如果随便乱输，后果自行负责！").setPositiveButton("重新输入\n",null).setNegativeButton("好了,进入主页吧!\n老猿gun远点~~", new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -146,4 +147,9 @@ public class GuideActivity extends Activity{
         }
     }
 
+    @Override
+    protected void refreshAD() {
+        loadAD(adViewrectangle);
+        loadAD(mAdView);
+    }
 }

@@ -37,13 +37,13 @@
         android:visibility="gone"
         android:src="@drawable/refresh"/>
 
-
     <WebView
         android:id="@+id/webview"
         android:layout_marginTop="44dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/adView"/>
+        android:layout_above="@+id/adViewbottom"
+        android:layout_marginBottom="8dp"/>
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
