@@ -16,7 +16,7 @@ public class ADTool {
 //    public static ADTool getInstance() {
 //        return adTool;
 //    }
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     public static final String AD_APP_ID ;
     public static final String AD_BANNER ;
     public static final String AD_BANNER_RECTANGLE;
@@ -60,7 +60,7 @@ public class ADTool {
     }
 
     public static void loadAD(AdView adView,String adID){
-        adView.setAdUnitId(adID);
+//        adView.setAdUnitId(adID);
         adView.loadAd(new AdRequest.Builder().build());
     }
 

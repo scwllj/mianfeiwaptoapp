@@ -32,8 +32,8 @@ public class Util {
 
     public static HashMap<String,TimeToRefresh> listeners;
 
-    private static final String KEY = "abcdefg1234567890hijklmn";
-
+    private static final String KEY = "asdfjgjasfaefakjhf";
+    private static final String KEY2 = "3489kjdu23nsdiry";
     private static final String SHA1PRNG = "SHA1PRNG";   // SHA1PRNG 强随机种子算法, 要区别4.2以上版本的调用方法
     private static final String IV = "qws871bz73msl9x8";
     private static final String AES = "AES";   //AES 加密
@@ -49,10 +49,12 @@ public class Util {
     }
 
     private static String decriptUrl(String src){
-        try {
-            return new String(Base64.decode(src.getBytes(), Base64.DEFAULT));
-        }catch (Exception ex){
+        if(src.contains(KEY) && src.contains(KEY2)){
+            try {
+                return new String(Base64.decode(src.replace(KEY,"").replace(KEY2,"").getBytes(), Base64.DEFAULT));
+            }catch (Exception ex){
 
+            }
         }
         return  "";
     }
@@ -61,7 +63,7 @@ public class Util {
     public static void setUrl(Context context,String url){
         SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("murl",Base64.encodeToString(url.getBytes(), Base64.DEFAULT));
+        editor.putString("murl",KEY+Base64.encodeToString(url.getBytes(), Base64.DEFAULT)+KEY2);
         editor.commit();
     }
 
@@ -69,6 +71,12 @@ public class Util {
         SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("murl","");
+        editor.commit();
+    }
+    public static void resetAll(Context context){
+        SharedPreferences sp = context.getSharedPreferences("myConfig",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
         editor.commit();
     }
 
@@ -301,7 +309,7 @@ public class Util {
             public void run() {
                 notifyRefresh();
             }
-        },10*1000,10*1000);
+        },20*1000,20*1000);
     }
 
 }

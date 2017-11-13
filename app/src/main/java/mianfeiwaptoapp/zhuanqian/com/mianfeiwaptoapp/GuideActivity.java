@@ -81,7 +81,7 @@ public class GuideActivity extends BaseActivity{
     private class MyAdapter extends PagerAdapter{
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container,final int position) {
 
             viewPager.setEnabled(false);
             new Handler().postDelayed(new Runnable() {
@@ -104,7 +104,12 @@ public class GuideActivity extends BaseActivity{
                     @Override
                     public void onClick(View view) {
                         Util.setPSW(GuideActivity.this,editText.getText().toString().trim());
-                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(ADTool.getBannerRectangle(GuideActivity.this)).setMessage("你如果你输入为空，就是没有密码！").setPositiveButton("老猿废话多",null).setPositiveButton("重新输入",null ).show();
+                        new AlertDialog.Builder(GuideActivity.this).setCustomTitle(ADTool.getBannerRectangle(GuideActivity.this)).setMessage("你如果你输入为空，就是没有密码！").setNegativeButton("老猿废话多", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                viewPager.setCurrentItem(position+1);
+                            }
+                        }).setPositiveButton("重新输入",null ).show();
                     }
                 });
             }else if(position==names.size()+1){

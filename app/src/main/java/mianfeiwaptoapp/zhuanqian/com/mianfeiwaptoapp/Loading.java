@@ -125,10 +125,10 @@ public class Loading extends Activity implements RewardedVideoAdListener {
 
     private void doNext(){
         Intent intent = new Intent(Loading.this,GuideActivity.class);
-        if(!TextUtils.isEmpty(Util.getUrl(Loading.this.getApplicationContext()))){
-            intent = new Intent(Loading.this,MainActivity.class);
-        }else if(Util.hasPSW(Loading.this)){
+        if(Util.hasPSW(Loading.this)){
             intent = new Intent(Loading.this,PSWActivity.class);
+        }else if(!TextUtils.isEmpty(Util.getUrl(Loading.this.getApplicationContext()))){
+            intent = new Intent(Loading.this,MainActivity.class);
         }
         startActivity(intent);
         finish();

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -57,7 +58,7 @@ public class MainActivity extends BaseActivity {
                     .setMessage("你的url不是以http开头的,页面加载不出来,请清除应用数据，重启app").setNegativeButton("我去设置", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Intent intent = new Intent("com.android.settings");
+                    Intent intent = new Intent(Settings.ACTION_SETTINGS);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
@@ -65,7 +66,7 @@ public class MainActivity extends BaseActivity {
             }).setPositiveButton("帮我重置", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Util.resetUrl(MainActivity.this);
+                    Util.resetAll(MainActivity.this);
                     Intent intent = new Intent(MainActivity.this,Loading.class);
                     startActivity(intent);
                     finish();
