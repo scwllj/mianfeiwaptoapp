@@ -43,7 +43,7 @@ public class GuideActivity extends BaseActivity{
         names.add("注意：这款app可以锁定一个主页地址，锁定之后，只能在app管理中清除数据，方可启用重设大法！");
         names.add("注意：这款app可以定制主页的标题。你进入主页有点击标题，方可编辑。输入框为空，我可是不会改的哦！");
         names.add("注意：此款app有密码锁，后面的步骤会邀请你设置。你锁定的主页只希望你能看到，比如XXX,你懂的。要重设密码，还是请到应用设置清除数据");
-        names.add("注意：清除数据之后，以前的设置什么都没有了，请记住你锁定的主页地址");
+        names.add("注意：清除数据之后，以前的设置什么都没有了，请记住你锁定的主页地址!\n如果您有需要网站封装成APP，请联系qq：168035945");
         for (int i = 0; i <names.size() ; i++) {
             TextView textView = new TextView(GuideActivity.this);
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

@@ -16,7 +16,7 @@ public class ADTool {
 //    public static ADTool getInstance() {
 //        return adTool;
 //    }
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
     public static final String AD_APP_ID ;
     public static final String AD_BANNER ;
     public static final String AD_BANNER_RECTANGLE;
