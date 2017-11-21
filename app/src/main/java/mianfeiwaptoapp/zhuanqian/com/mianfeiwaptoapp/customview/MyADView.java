@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -17,7 +19,7 @@ import mianfeiwaptoapp.zhuanqian.com.mianfeiwaptoapp.R;
  * Created by Administrator on 2017/11/12.
  */
 
-public class MyADView extends View {
+public class MyADView extends RelativeLayout {
 
     private int style;
 
@@ -35,11 +37,16 @@ public class MyADView extends View {
         initView();
     }
 
+
     private void initView(){
         AdView adView = new AdView(getContext());
         adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
         adView.setAdUnitId(ADTool.AD_BANNER_RECTANGLE);
+        RelativeLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+        params.addRule(CENTER_IN_PARENT,TRUE);
+        addView(adView,params);
         adView.loadAd(new AdRequest.Builder().build());
+
     }
 
     public  void loadAD(){

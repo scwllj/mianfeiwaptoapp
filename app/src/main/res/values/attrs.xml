@@ -2,6 +2,6 @@
 <resources>
 
     <declare-styleable name="myADView">
-        <attr name="style" format="integer"/>
+        <attr name="style" format="enum"/>
     </declare-styleable>
 </resources>
